@@ -41,13 +41,13 @@ import com.google.gson.Gson;
 
 
 
-public class GetConnection
+public class MickeyDataBaseClass
 {       
 	
 	    public static int TicketsCount;
         public static Scanner Scan = new Scanner(System.in);
         public static Persistence persobj;
-        public static GetConnection get = new GetConnection();
+        public static MickeyDataBaseClass get = new MickeyDataBaseClass();
         
     public static void main(String arg[]) {
         

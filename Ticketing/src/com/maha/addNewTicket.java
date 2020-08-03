@@ -79,7 +79,7 @@ public class addNewTicket extends HttpServlet{
          Assigned_To=(String) jObject.get("EMP_ID");
          Max_Date=(String) jObject.get("MAX_DATE");
     
-      	         GetConnection get = new GetConnection();
+      	         MickeyDataBaseClass get = new MickeyDataBaseClass();
              
                try {
             	   

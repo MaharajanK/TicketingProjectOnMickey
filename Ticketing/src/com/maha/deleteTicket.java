@@ -36,7 +36,7 @@ public class deleteTicket extends HttpServlet{
 //      out.println(request.getRequestURI());                                    //.................print URI
 //      out.println(request.getQueryString());                                   //.................print parameter
 	  
-	  GetConnection get = new GetConnection();
+	  MickeyDataBaseClass get = new MickeyDataBaseClass();
 	  
 	  try {
 		  out.println();

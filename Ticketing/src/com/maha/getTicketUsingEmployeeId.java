@@ -41,7 +41,7 @@ public class getTicketUsingEmployeeId extends HttpServlet{
            
            PrintWriter out = response.getWriter();
 
-           GetConnection get = new GetConnection();
+           MickeyDataBaseClass get = new MickeyDataBaseClass();
            
            
            String fileName = FilenameUtils.getName(request.getRequestURI());

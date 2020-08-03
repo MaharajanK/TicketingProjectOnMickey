@@ -57,7 +57,7 @@ public class TicketingEmployeeServlet extends HttpServlet{
            
            
            
-           GetConnection get = new GetConnection();
+           MickeyDataBaseClass get = new MickeyDataBaseClass();
            
            if(URILength == 3) {
             	   arr1  = get.gettingAllEmployeeDetails("All");

@@ -67,7 +67,7 @@ public class updateingTicketDetails extends HttpServlet{
          updatePera.put(keyStr, (String) keyvalue);
          
     }
-     GetConnection get = new GetConnection();
+     MickeyDataBaseClass get = new MickeyDataBaseClass();
       
      
      try {

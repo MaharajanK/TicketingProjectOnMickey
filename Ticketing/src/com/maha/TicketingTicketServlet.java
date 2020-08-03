@@ -50,7 +50,7 @@ public class TicketingTicketServlet extends HttpServlet{
            
            PrintWriter out = response.getWriter();
 
-           GetConnection get = new GetConnection();
+           MickeyDataBaseClass get = new MickeyDataBaseClass();
            
            String fileName = FilenameUtils.getName(request.getRequestURI());
            String URI = request.getRequestURI();
@@ -154,7 +154,7 @@ public class TicketingTicketServlet extends HttpServlet{
 			         Assigned_To=(String) jObject.get("EMP_ID");
 			         Max_Date=(String) jObject.get("MAX_DATE");
 			    
-			      	 GetConnection get = new GetConnection();
+			      	 MickeyDataBaseClass get = new MickeyDataBaseClass();
 			             
 			         try {
 			            	   
@@ -216,7 +216,7 @@ public class TicketingTicketServlet extends HttpServlet{
 	 		         
 	 		     }
 	 		    
-	 		     GetConnection get = new GetConnection();
+	 		     MickeyDataBaseClass get = new MickeyDataBaseClass();
 	 		      
 	 		     
 	 		     try {
@@ -252,7 +252,7 @@ public class TicketingTicketServlet extends HttpServlet{
 	           
 			  if(URILength == 5 && URIArray[URILength-2].equals("delete")) {
 				  
-				  GetConnection get = new GetConnection();
+				  MickeyDataBaseClass get = new MickeyDataBaseClass();
 				  try {
 					    String result = get.deleteTicket(Ticket_Id);
 						String json = new Gson().toJson(result);
