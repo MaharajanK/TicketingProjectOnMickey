@@ -43,6 +43,7 @@ import com.google.gson.Gson;
 
 public class GetConnection
 {       
+	
 	    public static int TicketsCount;
         public static Scanner Scan = new Scanner(System.in);
         public static Persistence persobj;
@@ -77,6 +78,7 @@ public class GetConnection
     
     
         public HashMap<String, String> gettingTicketDetails(String Ticket_Id) throws DataAccessException{
+        	System.out.println("...........................................");
                 try{
 
 //                	boolean present = findingTicketPresentInTable(Ticket_Id); 
