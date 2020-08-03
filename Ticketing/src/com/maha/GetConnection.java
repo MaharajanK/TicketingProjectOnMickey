@@ -76,10 +76,17 @@ public class GetConnection
     }
     
     
-        public HashMap<String, String> forTicketId(String id) throws DataAccessException{
+        public HashMap<String, String> gettingTicketDetails(String Ticket_Id) throws DataAccessException{
                 try{
-                     Persistence persobj = (Persistence)BeanUtil.lookup("Persistence");
-                     return TicketId_To_AllDetails(persobj, id);
+
+//                	boolean present = findingTicketPresentInTable(Ticket_Id); 
+//                	if(present) {
+                		Persistence persobj = (Persistence)BeanUtil.lookup("Persistence");
+                        return getTicketDetailsUsingTicketId(persobj, Ticket_Id);
+//                	}
+//                	else {
+//                		return Ticket_Id+" is not present in DB";
+//                	} 
                    
                 }
                 catch(Throwable t){
@@ -92,10 +99,10 @@ public class GetConnection
 
         
 
-        public ArrayList<HashMap<String, String>> forEmpId(String id) throws DataAccessException{
+        public ArrayList<HashMap<String, String>> gettingEmployeesDetails(String id) throws DataAccessException{
                 try{
                      Persistence persobj = (Persistence)BeanUtil.lookup("Persistence");
-                     return EmpId_To_EmpDetails(persobj, id);
+                     return getEmployeeDetailsUsingEmployeeId(persobj, id);
                 }
                 catch(Throwable t){
                     return null;
@@ -106,18 +113,16 @@ public class GetConnection
    
      public static void DataAdding() throws Exception {
         	
-        TempUse();
-        SetPriority();
-        SetStatus();
-        AddEmployees();
+    	 createTicketsForTemUse();
+         setPriority();
+         setStatus();
+         addEmployees();
            
     }
 
         
-        private static void TempUse() throws Exception {
+        private static void createTicketsForTemUse() throws Exception {
 
-
-            
             FileResource fr=new FileResource("C:\\Users\\maha\\MickeyPractice\\Sourcefiles\\TicketingTasks.csv");
             for(CSVRecord rec:fr.getCSVParser(false)) {
                
@@ -140,7 +145,7 @@ public class GetConnection
     
          // ......................... ADDIND EMPLOYEE ................................
 
-        private static void AddEmployees() throws DataAccessException {
+        private static void addEmployees() throws DataAccessException {
         
         
             FileResource fr=new FileResource("C:\\Users\\maha\\MickeyPractice\\Sourcefiles\\TicketingEmployeeDetails.csv");
@@ -173,7 +178,7 @@ public class GetConnection
 
  // ................................ SET PRIORITY TABLE ........................................
     
-    private static void SetPriority() throws DataAccessException {
+    private static void setPriority() throws DataAccessException {
         
 
         String[] priyorityType = new String[]{ "NONE","MEDIUM","HIGH"};
@@ -201,10 +206,10 @@ public class GetConnection
 
           // ................................ SET STATUS ........................................
 
-        private static void SetStatus() throws DataAccessException {
+        private static void setStatus() throws DataAccessException {
                  
-                String[] StstusType = new String[]{ "Open","In Progress","To Be Tested","Closed"};
-        
+               String[] StstusType = new String[]{ "Open","In Progress","To Be Tested","Closed"};
+               
                for(int i=0; i< StstusType.length; i++) {
             
                        Row r = new Row ("Status_Types");
@@ -216,26 +221,23 @@ public class GetConnection
                         d.addRow(r);
                         persobj.add(d);
                }
-                      System.out.println("STATUS types added");
-        
-            
+               System.out.println("STATUS types added");        
         }
 
 
 
-     public ArrayList<HashMap<String, String>> allTicketsDetails() throws DataAccessException{
+     public ArrayList<HashMap<String, String>> gettingAllTicketsDetails() throws DataAccessException{
 
 
                 try{
                      Persistence persobj = (Persistence)BeanUtil.lookup("Persistence");
-                     String[] tickets = new String[] {"UX-T300","UX-T301","DB-T302","CL-T303","DB-T304","UX-T305","DB-T306","DB-T307"};
-                     
-                      ArrayList<String> ids = gettingAllTicketIdsInDB();
+                    
+                     ArrayList<String> ids = gettingAllTicketIdsFromDb();
                      
                      ArrayList<HashMap<String, String>> ans = new ArrayList<HashMap<String, String>>();
                      
                      for(int i=0; i<ids.size(); i++){
-                        ans.add(TicketId_To_AllDetails(persobj, ids.get(i)));
+                        ans.add(getTicketDetailsUsingTicketId(persobj, ids.get(i)));
                      }
                      return ans;
                 }
@@ -243,12 +245,10 @@ public class GetConnection
                     return null;
                 } 
              
-             
-             
-    }
+     }
      
      
-     public ArrayList<HashMap<String, String>> allEmployeeDetails(String type) {
+     public ArrayList<HashMap<String, String>> gettingAllEmployeeDetails(String type) {
     	 
     	 try{
     		 Persistence persobj = (Persistence)BeanUtil.lookup("Persistence");
@@ -295,7 +295,7 @@ public class GetConnection
    
 
      
-     private static ArrayList<String> gettingAllTicketIdsInDB() throws Exception {
+     private static ArrayList<String> gettingAllTicketIdsFromDb() throws Exception {
     	 
     	 
              Persistence persobj = (Persistence)BeanUtil.lookup("Persistence");
@@ -321,63 +321,57 @@ public class GetConnection
      }
 
 
-
-
-
-
        //........................WHEN CLICK THE SPECIFIED TICKET IT FETCH THE ALL THE INFORMATION FROM THIS TICKET...............................
 
 
-    public static HashMap<String, String> TicketId_To_AllDetails(Persistence persobj, String TicketID) throws DataAccessException {
+   public static HashMap<String, String> getTicketDetailsUsingTicketId(Persistence persobj, String TicketID) throws DataAccessException {
         
       try {  
-      HashMap<String, String> map = null;  
-      String TASK = (String) TicketId_To_Task(persobj,TicketID);                                          //  finding TASK
+           HashMap<String, String> map = null;  
+           String TASK = (String) gettingTaskFromTicketId(persobj,TicketID);                                          //  finding TASK
     
-      Date[] Dates = TicketId_To_Date(persobj,TicketID);                                                 //  finding R_DATE and m_DATE
-      Date RELESE_DATE = Dates[0];
-      Date MAX_DATE = Dates[1];
+           Date[] Dates = gettingDateFromTicketId(persobj,TicketID);                                                 //  finding R_DATE and m_DATE
+           Date RELESE_DATE = Dates[0];
+           Date MAX_DATE = Dates[1];
      
-      String OWNER = (String) TicketId_To_Owner(persobj,TicketID);                                       //   finding OWNER
+           String OWNER = (String) gettingOwnerIdFromTicketId(persobj,TicketID);                                       //   finding OWNER
      
-      String CURRENT_WORKER_ID = TicketId_To_EmpId(persobj,TicketID);                                    //   finding CURRENT_WORKER
+           String CURRENT_WORKER_ID = gettingEmployeeIdFromTicketId(persobj,TicketID);                                    //   finding CURRENT_WORKER
      
-      Row CURRENT_WORKER_DETAILS = EmpId_To_EmpRow(CURRENT_WORKER_ID);                                   //   finding CURRENT_WORKER_DETAILS
+           Row CURRENT_WORKER_DETAILS = gettingEmployeeRowFromTicketId(CURRENT_WORKER_ID);                                   //   finding CURRENT_WORKER_DETAILS
       
-      int PRIORITY_ID = TicketId_To_Priotityid(persobj,TicketID);                                        //   finding PRIORITY_ID
+           int PRIORITY_ID = gettingPriorityIdFromTicketId(persobj,TicketID);                                        //   finding PRIORITY_ID
     
-      String PRIORITY = Priotityid_To_Priotity(persobj,PRIORITY_ID);                                     //   finding PRIORITY
+           String PRIORITY = gettingPriorityNameFromPriorityId(persobj,PRIORITY_ID);                                     //   finding PRIORITY
      
-      int STATUS_ID = TicketId_To_StstusId(persobj, TicketID);
+           int STATUS_ID = gettingStatusIdFromTicketId(persobj, TicketID);
      
-      String STSTUS = StatusId_To_Ststus(persobj,STATUS_ID);
+           String STSTUS = gettingStatusNameFromStstusId(persobj,STATUS_ID);
 
-      SimpleDateFormat sdfr = new SimpleDateFormat("dd/MMM/yyyy");
+           SimpleDateFormat sdfr = new SimpleDateFormat("dd/MMM/yyyy");
       
-      map  = new HashMap<>();
-      map.put("TICKET_ID", TicketID);
-      map.put("OWNER_ID", OWNER);
-      map.put("RELESE_DATE", sdfr.format(RELESE_DATE));
-      map.put("MAX_DATE", sdfr.format(MAX_DATE));
-      map.put("EMP_ID", CURRENT_WORKER_DETAILS.get("EMP_ID").toString());
-      map.put("PRIORITY", PRIORITY);
-      map.put("STSTUS", STSTUS);
-      map.put("TASK", TASK);
+           map  = new HashMap<>();
+           map.put("TICKET_ID", TicketID);
+           map.put("OWNER_ID", OWNER);
+           map.put("RELESE_DATE", sdfr.format(RELESE_DATE));
+           map.put("MAX_DATE", sdfr.format(MAX_DATE));
+           map.put("EMP_ID", CURRENT_WORKER_DETAILS.get("EMP_ID").toString());
+           map.put("PRIORITY", PRIORITY);
+           map.put("STSTUS", STSTUS);
+           map.put("TASK", TASK);
       
-      
-      
-       return map;
+           return map;
      }
-             catch(Throwable t){
-            	 System.out.println(t.toString());
-                 return null;
-             }
+     catch(Throwable t){
+            System.out.println(t.toString());
+            return null;
+     }
     }
      
      
     //................................................TICKET_ID TO TASK...........................................................
     
-    private static Object TicketId_To_Task(Persistence persobj, String TicketID) throws DataAccessException {     
+    private static Object gettingTaskFromTicketId(Persistence persobj, String TicketID) throws DataAccessException {     
 
         SelectQuery sq = new SelectQueryImpl(new Table("Ticket_Task"));
         sq.addSelectColumns(Arrays.asList(new Column("Ticket_Task","TICKET_ID"), new Column("Ticket_Task","TASK")));
@@ -394,7 +388,7 @@ public class GetConnection
     
     //...................................................TICKET_ID TO DATE........................................................
     
-    private static Date[] TicketId_To_Date(Persistence persobj, String TicketID) throws DataAccessException {          
+    private static Date[] gettingDateFromTicketId(Persistence persobj, String TicketID) throws DataAccessException {          
 
         SelectQuery sq = new SelectQueryImpl(new Table("Ticket_Vs_Date"));
         sq.addSelectColumns(Arrays.asList(new Column("Ticket_Vs_Date","TICKET_ID"), new Column("Ticket_Vs_Date","RELESE_DATE"), new Column("Ticket_Vs_Date","MAX_DATE")));
@@ -419,7 +413,7 @@ public class GetConnection
     
     //...................................................TICKET_ID TO OWNER........................................................
     
-            private static Object TicketId_To_Owner(Persistence persobj, String TicketID) throws DataAccessException {
+            private static Object gettingOwnerIdFromTicketId(Persistence persobj, String TicketID) throws DataAccessException {
 
                 SelectQuery sq = new SelectQueryImpl(new Table("Ticket_Vs_Owner"));
                 sq.addSelectColumns(Arrays.asList(new Column("Ticket_Vs_Owner","TICKET_ID"), new Column("Ticket_Vs_Owner","OWNER_ID")));
@@ -437,7 +431,7 @@ public class GetConnection
             
             //...................................................TICKET_ID TO EMP_ID........................................................
             
-            private static String TicketId_To_EmpId(Persistence persobj, String TicketId) throws DataAccessException{
+            private static String gettingEmployeeIdFromTicketId(Persistence persobj, String TicketId) throws DataAccessException{
                 
                 SelectQuery sq = new SelectQueryImpl(new Table("Emp_Vs_Ticket"));
                 sq.addSelectColumns(Arrays.asList(new Column("Emp_Vs_Ticket","EMP_ID"), new Column("Emp_Vs_Ticket","TICKET_ID")));
@@ -456,7 +450,7 @@ public class GetConnection
             
             //...................................................EMP_ID TO EMP_ALL_DETAILS........................................................
             
-               private static Row EmpId_To_EmpRow(String EmpId) throws Exception{
+               private static Row gettingEmployeeRowFromTicketId(String EmpId) throws Exception{
                     
             	    Persistence persobj = (Persistence)BeanUtil.lookup("Persistence");
                     SelectQuery sq = new SelectQueryImpl(new Table("Employee_Details"));
@@ -470,15 +464,13 @@ public class GetConnection
                     
                     return row;
                     
-                    
-                    
                 }
                
                
                
                 //...................................................TICKET_ID TO PRIORITY_ID........................................................
                 
-                private static int TicketId_To_Priotityid(Persistence persobj, String TicketID) throws DataAccessException {
+                private static int gettingPriorityIdFromTicketId(Persistence persobj, String TicketID) throws DataAccessException {
 
                     SelectQuery sq = new SelectQueryImpl(new Table("Ticket_Vs_Priority"));
                     sq.addSelectColumns(Arrays.asList(new Column("Ticket_Vs_Priority","TICKET_ID"), new Column("Ticket_Vs_Priority","PRIORITY_ID")));
@@ -494,7 +486,7 @@ public class GetConnection
                 
                 //...................................................PRIORITY_ID TO PRIORITY_NAME........................................................
                 
-                private static String Priotityid_To_Priotity(Persistence persobj, int PriorityId) throws DataAccessException {
+                private static String gettingPriorityNameFromPriorityId(Persistence persobj, int PriorityId) throws DataAccessException {
 
                     SelectQuery sq = new SelectQueryImpl(new Table("Priority_Detail"));
                     sq.addSelectColumns(Arrays.asList(new Column("Priority_Detail","PRIORITY_ID"), new Column("Priority_Detail","PRIORITY_NAME")));
@@ -512,7 +504,7 @@ public class GetConnection
                 
                 //...................................................PRIORITY_ID TO PRIORITY_NAME........................................................
                 
-                private static int Priotityname_To_Priority(Persistence persobj, String PriorityName) throws DataAccessException {
+                private static int gettingPriorityIdFromPriorityName(Persistence persobj, String PriorityName) throws DataAccessException {
 
                     SelectQuery sq = new SelectQueryImpl(new Table("Priority_Detail"));
                     sq.addSelectColumns(Arrays.asList(new Column("Priority_Detail","PRIORITY_ID"), new Column("Priority_Detail","PRIORITY_NAME")));
@@ -531,20 +523,19 @@ public class GetConnection
                  //...................................................STATUS_ID TO STATUS........................................................
                   
                   
-                   private static String StatusId_To_Ststus(Persistence persobj,int StstusId) throws DataAccessException{
+                   private static String gettingStatusNameFromStstusId(Persistence persobj,int StstusId) throws DataAccessException{
                        
 
                         try{
-                              SelectQuery sq = new SelectQueryImpl(new Table("Status_Types"));
-                              sq.addSelectColumns(Arrays.asList(new Column("Status_Types","STATUS_ID"), new Column("Status_Types","STATUS_NAME")));
-                              Criteria  SelectCt = new Criteria(new Column("Status_Types", "STATUS_ID"), StstusId , QueryConstants.EQUAL);
-                              sq.setCriteria(SelectCt);
-                              //Persistence p = (Persistence)BeanUtil.lookup("Persistence");
-                              DataObject dataobj = persobj.get(sq);
-                               Row r = dataobj.getRow("Status_Types");
-                              System.out.println(".............................................................");
-                              return  (String) r.get("STATUS_NAME");
-                             
+                            SelectQuery sq = new SelectQueryImpl(new Table("Status_Types"));
+                            sq.addSelectColumns(Arrays.asList(new Column("Status_Types","STATUS_ID"), new Column("Status_Types","STATUS_NAME")));
+                            Criteria  SelectCt = new Criteria(new Column("Status_Types", "STATUS_ID"), StstusId , QueryConstants.EQUAL);
+                            sq.setCriteria(SelectCt);
+                            //Persistence p = (Persistence)BeanUtil.lookup("Persistence");
+                            DataObject dataobj = persobj.get(sq);
+                            Row r = dataobj.getRow("Status_Types");
+                            System.out.println(".............................................................");
+                            return  (String) r.get("STATUS_NAME");
                         }
                         catch(Throwable t){
                             System.out.println(t);
@@ -557,7 +548,7 @@ public class GetConnection
                  //...................................................STATUS_NAME TO STATUS_ID........................................................
                    
                    
-                   private static int StatusName_To_Status(Persistence persobj,String StstusName) throws DataAccessException{
+                   private static int gettingStatusIdFromStstusName(Persistence persobj,String StstusName) throws DataAccessException{
                        
 
                               SelectQuery sq = new SelectQueryImpl(new Table("Status_Types"));
@@ -576,7 +567,7 @@ public class GetConnection
 
                  //...................................................TICKET_ID TO STATUS_ID........................................................
                    
-                   private static int TicketId_To_StstusId(Persistence persobj, String TicketId) throws DataAccessException{
+                   private static int gettingStatusIdFromTicketId(Persistence persobj, String TicketId) throws DataAccessException{
                         
                         SelectQuery sq = new SelectQueryImpl(new Table("Ticket_Vs_Status"));
                         sq.addSelectColumns(Arrays.asList(new Column("Ticket_Vs_Status","TICKET_ID"), new Column("Ticket_Vs_Status","STATUS_ID")));
@@ -596,8 +587,8 @@ public class GetConnection
                             //...................................................EMP_ID TO TICKET_ID........................................................
 
        
-                public static ArrayList<HashMap<String, String>> EmpId_To_EmpDetails(Persistence persobj, String EmpId) throws DataAccessException, ParseException, SQLException, QueryConstructionException {
-                              //ArrayList<String> ticketIds = new ArrayList<String>();
+                     public static ArrayList<HashMap<String, String>> getEmployeeDetailsUsingEmployeeId(Persistence persobj, String EmpId) throws DataAccessException, ParseException, SQLException, QueryConstructionException {
+                              
                               HashMap<Integer, HashMap<String,String>> map2 = new HashMap<Integer,HashMap<String,String>>();
                               SelectQuery sq = new SelectQueryImpl(new Table("Emp_Vs_Ticket"));
                               sq.addSelectColumns(Arrays.asList(new Column("Emp_Vs_Ticket","EMP_ID"), new Column("Emp_Vs_Ticket","TICKET_ID")));
@@ -613,7 +604,7 @@ public class GetConnection
                                   
                                    Row row = (Row) it.next();
                                    String TicketId = (String) row.get("TICKET_ID");
-                                   HashMap<String, String> map1 = TicketId_To_AllDetails(persobj, TicketId);
+                                   HashMap<String, String> map1 = getTicketDetailsUsingTicketId(persobj, TicketId);
                                    arr.add(map1);
                               }
             
@@ -717,72 +708,83 @@ public class GetConnection
     	   
     	   
     	   try {
-    		   Persistence persobj = (Persistence)BeanUtil.lookup("Persistence");
-        	   
-        	   
-        	   for (String field : updatePera.keySet()) {
-        	          
-        		   String value = updatePera.get(field);
-        		   Date date = null; 
-        		   int priorityNum = 0;
-        		   int statusNum = 0;
-        		   
-        		   String tableName = null;
-        		   
-        		   if(field.equals("TASK")) {
-        			    tableName = "Ticket_Task";
-        		   }
-        		   else if(field.equals("OWNER_ID")) {
-        			    tableName = "Ticket_Vs_Owner";
-        		   }
-        		   else if(field.equals("MAX_DATE") || field.equals("STARTING_DATE") || field.equals("FINISHING_DATE")) {
-        			    tableName = "Ticket_Vs_Date";
-        			    date=Date.valueOf(value);   			    
-        		   }
-        		   else if(field.equals("PRIORITY")) {
-        			    field = "PRIORITY_ID";
-        			    tableName = "Ticket_Vs_Priority";
-//        			    priorityNum = Priotityname_To_Priority(persobj, value);
-        			    priorityNum = Integer.parseInt(value);
-        		   } 
-        		   else if(field.equals("EMP_ID")) {
-        			    tableName = "Emp_Vs_Ticket";
-        		   } 
-        		   else if(field.equals("STSTUS")) {
-        			    field = "STATUS_ID";
-        			    tableName = "Ticket_Vs_Status";
-//        			    statusNum = StatusName_To_Status(persobj, value);
-        			    statusNum = Integer.parseInt(value);
+    		   boolean Present = findingTicketfromTable(Ticket_Id);
+    		   
+    		   if(Present) {
+    			   
+    			   Persistence persobj = (Persistence)BeanUtil.lookup("Persistence");
+            	   
+            	   
+            	   for (String field : updatePera.keySet()) {
+            	          
+            		   String value = updatePera.get(field);
+            		   Date date = null; 
+            		   int priorityNum = 0;
+            		   int statusNum = 0;
+            		   
+            		   String tableName = null;
+            		   
+            		   if(field.equals("TASK")) {
+            			    tableName = "Ticket_Task";
+            		   }
+            		   else if(field.equals("OWNER_ID")) {
+            			    tableName = "Ticket_Vs_Owner";
+            		   }
+            		   else if(field.equals("MAX_DATE") || field.equals("STARTING_DATE") || field.equals("FINISHING_DATE")) {
+            			    tableName = "Ticket_Vs_Date";
+            			    date=Date.valueOf(value);   			    
+            		   }
+            		   else if(field.equals("PRIORITY")) {
+            			    field = "PRIORITY_ID";
+            			    tableName = "Ticket_Vs_Priority";
+//            			    priorityNum = Priotityname_To_Priority(persobj, value);
+            			    priorityNum = Integer.parseInt(value);
+            		   } 
+            		   else if(field.equals("EMP_ID")) {
+            			    tableName = "Emp_Vs_Ticket";
+            		   } 
+            		   else if(field.equals("STSTUS")) {
+            			    field = "STATUS_ID";
+            			    tableName = "Ticket_Vs_Status";
+//            			    statusNum = StatusName_To_Status(persobj, value);
+            			    statusNum = Integer.parseInt(value);
+            			    
+            		   } 
+            		   
+            		   
+            		    UpdateQuery updquery = new UpdateQueryImpl(tableName);
+            		    
+            		    Criteria UpdateCt = new Criteria(new Column(tableName, "TICKET_ID"), Ticket_Id, QueryConstants.EQUAL);
+        			    updquery.setCriteria(UpdateCt);
         			    
-        		   } 
-        		   
-        		   
-        		    UpdateQuery updquery = new UpdateQueryImpl(tableName);
-        		    
-        		    Criteria UpdateCt = new Criteria(new Column(tableName, "TICKET_ID"), Ticket_Id, QueryConstants.EQUAL);
-    			    updquery.setCriteria(UpdateCt);
-    			    
-    			    
-        		    if(field.equals("MAX_DATE") || field.equals("STARTING_DATE") || field.equals("FINISHING_DATE")) {
-        		    	updquery.setUpdateColumn(field, date);
-        		    }
-        		    else if(field.equals("PRIORITY")) {
-        		    	updquery.setUpdateColumn(field, priorityNum);
-        		    }
-                    else if(field.equals("STSTUS")) {
-                    	updquery.setUpdateColumn(field, statusNum);
-        		    }
-                    else{
-                    	updquery.setUpdateColumn(field, value);
-                    }
-    			    
-        		    
-        		    
-    			    persobj.update(updquery);
-    			    
-        	     }
-        	   
-        	     return Ticket_Id+" : "+"UPDATED";
+        			    
+            		    if(field.equals("MAX_DATE") || field.equals("STARTING_DATE") || field.equals("FINISHING_DATE")) {
+            		    	updquery.setUpdateColumn(field, date);
+            		    }
+            		    else if(field.equals("PRIORITY")) {
+            		    	updquery.setUpdateColumn(field, priorityNum);
+            		    }
+                        else if(field.equals("STSTUS")) {
+                        	updquery.setUpdateColumn(field, statusNum);
+            		    }
+                        else{
+                        	updquery.setUpdateColumn(field, value);
+                        }
+        			    
+            		    
+            		    
+        			    persobj.update(updquery);
+        			    
+            	     }
+            	   
+            	     return Ticket_Id+" : "+"UPDATED";
+    		   }
+    		   
+    		   else {
+    			   return Ticket_Id+" : The given TicketId not present in DB";
+    		   }
+    		   
+    		  
     	   }
     	   
     	   catch(Throwable t){
@@ -795,21 +797,30 @@ public class GetConnection
        public String deleteTicket(String Ticket_Id) throws Exception {
     	   
     	  try {
-    		  Persistence persobj = (Persistence)BeanUtil.lookup("Persistence");
-    		  
-			DeleteQuery d = new DeleteQueryImpl("Ticket_Task");
-		    Criteria cr = new Criteria(new Column("Ticket_Task", "TICKET_ID"), Ticket_Id, QueryConstants.EQUAL);
-	        d.setCriteria(cr);
-	        persobj.delete(d);
-	        
-	        
-	        DeleteQuery d1 = new DeleteQueryImpl("Emp_Vs_Ticket");
-		    Criteria cr1 = new Criteria(new Column("Emp_Vs_Ticket", "TICKET_ID"), Ticket_Id, QueryConstants.EQUAL);
-	        d1.setCriteria(cr1);
-	        persobj.delete(d1);
-	        
-	        
-	        return Ticket_Id+" : "+"DELETED";
+    		boolean Present = findingTicketfromTable(Ticket_Id);
+    		
+    		if(Present) {
+    			
+    			Persistence persobj = (Persistence)BeanUtil.lookup("Persistence");
+      		  
+    			DeleteQuery d = new DeleteQueryImpl("Ticket_Task");
+    		    Criteria cr = new Criteria(new Column("Ticket_Task", "TICKET_ID"), Ticket_Id, QueryConstants.EQUAL);
+    	        d.setCriteria(cr);
+    	        persobj.delete(d);
+    	        
+    	        
+    	        DeleteQuery d1 = new DeleteQueryImpl("Emp_Vs_Ticket");
+    		    Criteria cr1 = new Criteria(new Column("Emp_Vs_Ticket", "TICKET_ID"), Ticket_Id, QueryConstants.EQUAL);
+    	        d1.setCriteria(cr1);
+    	        persobj.delete(d1);
+    	        
+    	        
+    	        return Ticket_Id+" : DELETED";
+    		}
+    		else {
+    			return Ticket_Id+" : The given TicketId not present in DB";
+    		}
+    		
 	        		
     	  }
     	  catch(Throwable t){
@@ -819,7 +830,24 @@ public class GetConnection
        }
     
 
-       
+       public boolean findingTicketfromTable(String Ticket_Id) throws Exception {
+    	   
+    	   boolean present = false;
+    	   Persistence persobj = (Persistence)BeanUtil.lookup("Persistence");
+           SelectQuery sq = new SelectQueryImpl(new Table("Ticket_Task"));
+           sq.addSelectColumns(Arrays.asList(new Column("Ticket_Task","TICKET_ID"), new Column("Ticket_Task","TASK")));
+           DataObject dataobj = persobj.get(sq);
+           
+           Iterator it = (Iterator)dataobj.getRows("Ticket_Task");
+          
+           while (it.hasNext()) {
+        	   Row row = (Row) it.next();
+               if(row.get("TICKET_ID").equals(Ticket_Id)) {
+            	   present = true;
+               }
+           }
+    	   return present;
+       }
     
        
        
@@ -968,7 +996,7 @@ public class GetConnection
        //                  String[] tickets = new String[] {"UX-T300","UX-T301","DB-T302","CL-T303","DB-T304","UX-T305","DB-T306","DB-T307"};
        //                  ArrayList<HashMap<String, String>> ans = new ArrayList<HashMap<String, String>>();
        //                  for(int i=0; i<tickets.length; i++){
-       //                     ans.add(TicketId_To_AllDetails(persobj, tickets[i]));
+       //                     ans.add(getTicketDetailsUsingTicketId(persobj, tickets[i]));
        //                  }
        //                  //return ans;
        //                  return"maha";

@@ -1,3 +1,5 @@
+
+
 package com.maha;
 
 import java.util.HashMap;
@@ -27,7 +29,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-public class getTicketUsingEmployeeId extends HttpServlet{
+public class TicketingEmployeeServlet extends HttpServlet{
     
     public static String message;
     public static String parameterName;
@@ -36,23 +38,26 @@ public class getTicketUsingEmployeeId extends HttpServlet{
        message = "HELLO SERVLET";
     }
 
+    //http://localhost:8080/Ticketing/Employees                  -------------->   all Employees Details
+    //http://localhost:8080/Ticketing/Employee/ZU-TK-190         -------------->   specified Employee details
+    //http://localhost:8080/Ticketing/Employee/ZU-TK-190/Tickets -------------->   specified Employee Ticket details
+    
 	protected void doGet(HttpServletRequest request,HttpServletResponse response) throws IOException{
            
            
            PrintWriter out = response.getWriter();
 
-           GetConnection get = new GetConnection();
-           
-           
            String fileName = FilenameUtils.getName(request.getRequestURI());
-           ArrayList<HashMap<String, String>> arr1 = null;
-           
-           HashMap<String, String> empDetailMAP = null;
-           
            String URI = request.getRequestURI();
-           
            String[] URIArray = URI.split("/");
            int URILength = URIArray.length;
+           
+           ArrayList<HashMap<String, String>> arr1 = null;
+           HashMap<String, String> empDetailMAP = null;
+           
+           
+           
+           GetConnection get = new GetConnection();
            
            if(URILength == 3) {
             	   arr1  = get.gettingAllEmployeeDetails("All");
@@ -93,19 +98,14 @@ public class getTicketUsingEmployeeId extends HttpServlet{
         	   }
            }
            
-           else {
-        	   System.out.println("Enter into 6");
-           }
-         
-          
 	}
 
 
-  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    // TODO Auto-generated method stub
-    doGet(request, response);
-    
-  }
+//  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//    // TODO Auto-generated method stub
+//    doGet(request, response);
+//    
+//  }
 }
 
 

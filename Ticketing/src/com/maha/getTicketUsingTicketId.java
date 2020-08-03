@@ -64,7 +64,7 @@ public class getTicketUsingTicketId extends HttpServlet{
           
           if(URILength == 3) {
         	  try{   
-                  arr1  = get.allTicketsDetails();
+                  arr1  = get.gettingAllTicketsDetails();
                   String json = new Gson().toJson(arr1);
                   out.println(json);
                    
@@ -78,7 +78,7 @@ public class getTicketUsingTicketId extends HttpServlet{
         	  
                   
                   try{
-                           map1  = get.forTicketId(fileName);
+                           map1  = get.gettingTicketDetails(fileName);
                            String json = new Gson().toJson(map1);
                            out.println(json);
                             
