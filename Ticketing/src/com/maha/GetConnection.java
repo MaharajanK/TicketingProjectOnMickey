@@ -130,7 +130,7 @@ public class GetConnection
                
             	Random rand = new Random();
                 int upperbound = 3;
-                int int_random = rand.nextInt(upperbound);
+                //int int_random = rand.nextInt(upperbound);
                 LocalDate maxDate = LocalDate.now().minusDays(rand.nextInt(upperbound)-5);
                 Date MDate=Date.valueOf(maxDate);
                  
@@ -157,8 +157,8 @@ public class GetConnection
                 
                 r.set("EMP_ID", rec.get(0));
                 r.set("EMP_NAME", rec.get(1));
-                long mobile = Long.parseLong(rec.get(2));
-                r.set("MOBILE_NUM", mobile);
+                long mobileNum = Long.parseLong(rec.get(2));
+                r.set("MOBILE_NUM", mobileNum);
                 Date dob=Date.valueOf(rec.get(3));
                 r.set("DOB", dob);
                 Date doj=Date.valueOf(rec.get(4));
@@ -314,8 +314,8 @@ public class GetConnection
  		   
  		    while (it.hasNext()) { 
  		       Row row = (Row) it.next();
- 		       String TicketId = (String) row.get("TICKET_ID");
- 		      ids.add(TicketId);
+ 		       String ticketId = (String) row.get("TICKET_ID");
+ 		       ids.add(ticketId);
  		    }
  		    return ids;
  		    
@@ -333,33 +333,33 @@ public class GetConnection
            String TASK = (String) gettingTaskFromTicketId(persobj,TicketID);                                          //  finding TASK
     
            Date[] Dates = gettingDateFromTicketId(persobj,TicketID);                                                 //  finding R_DATE and m_DATE
-           Date RELESE_DATE = Dates[0];
-           Date MAX_DATE = Dates[1];
+           Date releseDate = Dates[0];
+           Date maxDate = Dates[1];
      
-           String OWNER = (String) gettingOwnerIdFromTicketId(persobj,TicketID);                                       //   finding OWNER
+           String owner = (String) gettingOwnerIdFromTicketId(persobj,TicketID);                                       //   finding OWNER
      
-           String CURRENT_WORKER_ID = gettingEmployeeIdFromTicketId(persobj,TicketID);                                    //   finding CURRENT_WORKER
+           String currentWorkerId = gettingEmployeeIdFromTicketId(persobj,TicketID);                                    //   finding CURRENT_WORKER
      
-           Row CURRENT_WORKER_DETAILS = gettingEmployeeRowFromTicketId(CURRENT_WORKER_ID);                                   //   finding CURRENT_WORKER_DETAILS
+           Row currentWorkerDetails = gettingEmployeeRowFromTicketId(currentWorkerId);                                   //   finding CURRENT_WORKER_DETAILS
       
-           int PRIORITY_ID = gettingPriorityIdFromTicketId(persobj,TicketID);                                        //   finding PRIORITY_ID
+           int PriorityId = gettingPriorityIdFromTicketId(persobj,TicketID);                                        //   finding PRIORITY_ID
     
-           String PRIORITY = gettingPriorityNameFromPriorityId(persobj,PRIORITY_ID);                                     //   finding PRIORITY
+           String priority = gettingPriorityNameFromPriorityId(persobj,PriorityId);                                     //   finding PRIORITY
      
-           int STATUS_ID = gettingStatusIdFromTicketId(persobj, TicketID);
+           int statusId = gettingStatusIdFromTicketId(persobj, TicketID);
      
-           String STSTUS = gettingStatusNameFromStstusId(persobj,STATUS_ID);
+           String status = gettingStatusNameFromStstusId(persobj,statusId);
 
-           SimpleDateFormat sdfr = new SimpleDateFormat("dd/MMM/yyyy");
+           SimpleDateFormat sDateFormat = new SimpleDateFormat("dd/MMM/yyyy");
       
            map  = new HashMap<>();
            map.put("TICKET_ID", TicketID);
-           map.put("OWNER_ID", OWNER);
-           map.put("RELESE_DATE", sdfr.format(RELESE_DATE));
-           map.put("MAX_DATE", sdfr.format(MAX_DATE));
-           map.put("EMP_ID", CURRENT_WORKER_DETAILS.get("EMP_ID").toString());
-           map.put("PRIORITY", PRIORITY);
-           map.put("STSTUS", STSTUS);
+           map.put("OWNER_ID", owner);
+           map.put("RELESE_DATE", sDateFormat.format(releseDate));
+           map.put("MAX_DATE", sDateFormat.format(maxDate));
+           map.put("EMP_ID", currentWorkerDetails.get("EMP_ID").toString());
+           map.put("PRIORITY", priority);
+           map.put("STSTUS", status);
            map.put("TASK", TASK);
       
            return map;
@@ -400,14 +400,14 @@ public class GetConnection
     
         DataObject dataobj = persobj.get(sq);
         Iterator it = (Iterator)dataobj.getRows("Ticket_Vs_Date");
-        Date [] ans = new Date[2];
+        Date [] dates = new Date[2];
         
            while (it.hasNext()) { 
                Row row = (Row) it.next();
-               ans[0] = (Date) row.get("RELESE_DATE");
-               ans[1] = (Date) row.get("MAX_DATE");
+               dates[0] = (Date) row.get("RELESE_DATE");
+               dates[1] = (Date) row.get("MAX_DATE");
            }
-        return ans;
+        return dates;
     
     }
     
@@ -559,7 +559,7 @@ public class GetConnection
                               sq.setCriteria(SelectCt);
                               
                               DataObject dataobj = persobj.get(sq);
-                               Row r = dataobj.getRow("Status_Types");
+                              Row r = dataobj.getRow("Status_Types");
                               System.out.println(".............................................................");
                               return  (int) r.get("STATUS_ID");
                              
@@ -601,16 +601,16 @@ public class GetConnection
                               DataObject dataobj = persobj.get(sq);
             
                               Iterator it = (Iterator)dataobj.getRows("Emp_Vs_Ticket");
-                              ArrayList<HashMap<String, String>> arr = new ArrayList<HashMap<String, String>>();
+                              ArrayList<HashMap<String, String>> empDetailStoringArray = new ArrayList<HashMap<String, String>>();
                               while (it.hasNext()) {
                                   
                                    Row row = (Row) it.next();
                                    String TicketId = (String) row.get("TICKET_ID");
                                    HashMap<String, String> map1 = getTicketDetailsUsingTicketId(persobj, TicketId);
-                                   arr.add(map1);
+                                   empDetailStoringArray.add(map1);
                               }
             
-                             return arr;
+                             return empDetailStoringArray;
                   } 
 
 
