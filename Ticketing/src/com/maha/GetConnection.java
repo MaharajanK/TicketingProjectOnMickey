@@ -78,7 +78,7 @@ public class GetConnection
     
     
         public HashMap<String, String> gettingTicketDetails(String Ticket_Id) throws DataAccessException{
-        	System.out.println("...........................................");
+        	
                 try{
 
 //                	boolean present = findingTicketPresentInTable(Ticket_Id); 
