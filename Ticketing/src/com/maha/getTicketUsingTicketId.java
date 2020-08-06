@@ -63,10 +63,11 @@ public class getTicketUsingTicketId extends HttpServlet{
     
           
           if(URILength == 3) {
-        	  try{   
-                  arr1  = get.gettingAllTicketsDetails();
-                  String json = new Gson().toJson(arr1);
-                  out.println(json);
+        	  try{     
+//                arr1  = get.gettingAllTicketsDetails();
+//                String json = new Gson().toJson(arr1);
+//                out.println(json);
+                out.println(get.gettingAllTicketsDetails());
                    
               }
               catch(Exception e){

@@ -72,6 +72,7 @@ public class TicketingTicketServlet extends HttpServlet{
                   arr1  = get.gettingAllTicketsDetails();
                   String json = new Gson().toJson(arr1);
                   out.println(json);
+                  //out.println(get.gettingAllTicketsDetails());
                    
               }
               catch(Exception e){
