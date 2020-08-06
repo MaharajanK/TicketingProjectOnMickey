@@ -46,8 +46,10 @@ class PersistenceClass{
 	
 	public static Persistence persobj;
 	
-	static{
-		 System.out.println("\n\n"+"********************************  Starting server   ********************************"+"\n\n");
+
+	private PersistenceClass() {
+		
+		 System.out.println("\n\n"+"********************************  Start server   ********************************"+"\n\n");
 	        
 	        Configuration.setString("server.home", "E:\\AdventNetMickeyLite\\AdventNet\\MickeyLite");
 	        Test gC =new Test();
@@ -69,17 +71,16 @@ class PersistenceClass{
 	            // TODO Auto-generated catch block
 	            e.printStackTrace();
 	        }
-	}
-	
-	private PersistenceClass() {
-		
-		
 		
 	}
 	
-	public static Persistence getInstance() {
+	public static Persistence getInstance() throws Exception {
 		
-        
+		if(persobj == null) {
+			
+			persobj = (Persistence) new PersistenceClass();
+			System.out.println("////////////////////////////   CREATED   /////////////////////////////////");
+		}
 		return persobj;
         
 	}
@@ -103,8 +104,8 @@ public class MickeyDataBaseClass
     	 //persobj = PersistenceClass.getInstance();
     	 
     	 DataAdding();
-//    	 System.out.println(get.gettingAllTicketsDetails());
-//    	 System.out.println(get.gettingTicketDetails("DB-T2"));
+    	 System.out.println(get.gettingAllTicketsDetails());
+    	 System.out.println(get.gettingTicketDetails("DB-T2"));
     	 System.out.println(get.gettingAllEmployeeDetails("ZU-TK-190"));
     }
     
@@ -150,7 +151,7 @@ public class MickeyDataBaseClass
 
         
         private static void createTicketsForTemUse() throws Exception {
-
+            
             FileResource fr=new FileResource("C:\\Users\\maha\\MickeyPractice\\Sourcefiles\\TicketingTasks.csv");
             for(CSVRecord rec:fr.getCSVParser(false)) {
                
@@ -167,7 +168,7 @@ public class MickeyDataBaseClass
                 
             }
             
-     
+            System.out.println("createTicketsForTemUse");
 
         }
     
@@ -353,7 +354,7 @@ public class MickeyDataBaseClass
     	 
     	  try {
     		  persobj = PersistenceClass.getInstance();
-    		  //persobj = (Persistence)BeanUtil.lookup("Persistence");
+    		 // persobj = (Persistence)BeanUtil.lookup("Persistence");
               
               SelectQuery sq = new SelectQueryImpl(new Table("Ticket_Task"));
    		    sq.addSelectColumns(Arrays.asList(new Column("Ticket_Task","TICKET_ID"), new Column("Ticket_Task","TASK")));
@@ -612,7 +613,7 @@ public class MickeyDataBaseClass
                             //...................................................EMP_ID TO TICKET_ID........................................................
 
        
-                     public static ArrayList<HashMap<String, String>> getEmployeeDetailsUsingEmployeeId(String EmpId) throws DataAccessException, ParseException, SQLException, QueryConstructionException {
+                     public static ArrayList<HashMap<String, String>> getEmployeeDetailsUsingEmployeeId(String EmpId) throws Exception {
                               System.out.println("getEmployeeDetailsUsingEmployeeId");
                     	      persobj = PersistenceClass.getInstance();
                     	 
@@ -694,7 +695,7 @@ public class MickeyDataBaseClass
                persobj.add(d);
                
                
-               
+               System.out.println(".....................");
                return ticket_Id+" : "+"created";
                
     	      } 
@@ -1267,6 +1268,7 @@ class Test extends StandAlonePersistence{
     public void postPopulation() throws Exception
     {
         System.out.println("\n\n"+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<   postPopulation Started   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+"\n\n");
+      
     }
     public void prePopulation() throws Exception
     {
