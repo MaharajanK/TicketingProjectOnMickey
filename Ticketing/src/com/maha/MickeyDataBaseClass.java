@@ -46,31 +46,53 @@ class PersistenceClass{
 	
 	public static Persistence persobj;
 	
-
-	private PersistenceClass() {
+//	System.out.println("\n\n"+"********************************  Start server   ********************************"+"\n\n");
+//    
+//    Configuration.setString("server.home", "E:\\AdventNetMickeyLite\\AdventNet\\MickeyLite");
+//    Test gC =new Test();
+//    
+//    try {
+//
+//        gC.startServer();
+//        System.out.println("\n\n"+"********************************   Starting server   ********************************"+"\n\n");
+//        
+//        persobj = (Persistence)BeanUtil.lookup("Persistence");
+//        
+//        
+//        System.out.println("START");
+//        System.out.println("Got persistence");
+//        
+//    } 
+//    
+//    catch (Exception e) {
+//        // TODO Auto-generated catch block
+//        e.printStackTrace();
+//    }
+	
+	private PersistenceClass() throws Exception {
 		
-		 System.out.println("\n\n"+"********************************  Start server   ********************************"+"\n\n");
+		System.out.println("\n\n"+"********************************  Start server   ********************************"+"\n\n");
+	    
+	    Configuration.setString("server.home", "E:\\AdventNetMickeyLite\\AdventNet\\MickeyLite");
+	    Test gC =new Test();
+	    
+	    try {
+	
+	        gC.startServer();
+	        System.out.println("\n\n"+"********************************   Starting server   ********************************"+"\n\n");
 	        
-	        Configuration.setString("server.home", "E:\\AdventNetMickeyLite\\AdventNet\\MickeyLite");
-	        Test gC =new Test();
+	        persobj = (Persistence)BeanUtil.lookup("Persistence");
 	        
-	        try {
-
-	            gC.startServer();
-	            System.out.println("\n\n"+"********************************   Starting server   ********************************"+"\n\n");
-	            
-	            persobj = (Persistence)BeanUtil.lookup("Persistence");
-	            
-	            
-	            System.out.println("START");
-	            System.out.println("Got persistence");
-	            
-	        } 
 	        
-	        catch (Exception e) {
-	            // TODO Auto-generated catch block
-	            e.printStackTrace();
-	        }
+	        System.out.println("START");
+	        System.out.println("Got persistence");
+	        
+	    } 
+	    
+	    catch (Exception e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+	    }
 		
 	}
 	
@@ -78,7 +100,8 @@ class PersistenceClass{
 		
 		if(persobj == null) {
 			
-			persobj = (Persistence) new PersistenceClass();
+			//persobj = (Persistence) new PersistenceClass();
+			 persobj = (Persistence)BeanUtil.lookup("Persistence");
 			System.out.println("////////////////////////////   CREATED   /////////////////////////////////");
 		}
 		return persobj;
@@ -113,8 +136,13 @@ public class MickeyDataBaseClass
         public HashMap<String, String> gettingTicketDetails(String Ticket_Id) throws DataAccessException{
         	
                 try{
-
+                        
                 	    persobj = PersistenceClass.getInstance();
+                	    if(persobj == null) {
+                	    	HashMap<String, String> f = new HashMap<String, String>();
+                	    	f.put("null", "null");
+                	    	return f;
+                	    }
                         return getTicketDetailsUsingTicketId( Ticket_Id);
 
                 }
@@ -254,6 +282,7 @@ public class MickeyDataBaseClass
         }
 
 
+        
 
      public ArrayList<HashMap<String, String>> gettingAllTicketsDetails() throws DataAccessException{
 
@@ -277,37 +306,14 @@ public class MickeyDataBaseClass
              
      }
         
-//        public String gettingAllTicketsDetails() throws DataAccessException{
-//
-//
-//            try{
-//            	 persobj = PersistenceClass.getInstance();
-////            	 persobj = (Persistence)BeanUtil.lookup("Persistence");
-//            	 
-//               //  ArrayList<String> ids = gettingAllTicketIdsFromDb();
-//                 return gettingAllTicketIdsFromDb();
-//                // ArrayList<HashMap<String, String>> ans = new ArrayList<HashMap<String, String>>();
-//                 
-//                 for(int i=0; i<ids.size(); i++){
-//                    ans.add(getTicketDetailsUsingTicketId(ids.get(i)));
-//                 }
-//                 
-//                 
-//            }
-//            catch(Throwable t){
-//            	
-//                return t.toString();
-//            } 
-//         
-// }
-     
-     
+
+
      public ArrayList<HashMap<String, String>> gettingAllEmployeeDetails(String type) {
     	 
     	 try{
     		 
-    		 persobj = PersistenceClass.getInstance();
-    		// persobj = (Persistence)BeanUtil.lookup("Persistence");
+    		// persobj = PersistenceClass.getInstance();
+    		 persobj = (Persistence)BeanUtil.lookup("Persistence");
     		 SelectQuery sq = new SelectQueryImpl(new Table("Employee_Details"));
    		     sq.addSelectColumns(Arrays.asList(new Column("Employee_Details","EMP_ID"),new Column("Employee_Details","EMP_NAME"),new Column("Employee_Details","MOBILE_NUM"),new Column("Employee_Details","DOB"),new Column("Employee_Details","DOJ")));
    		   
@@ -379,87 +385,8 @@ public class MickeyDataBaseClass
  		    
      }
      
-     
-//     private static String gettingAllTicketIdsFromDb() throws Exception {
-//    	 
-//   	  try {
-//   		     //persobj = PersistenceClass.getInstance();
-//              
-//   		  persobj = (Persistence)BeanUtil.lookup("Persistence");
-//             SelectQuery sq = new SelectQueryImpl(new Table("Ticket_Task"));
-//  		    sq.addSelectColumns(Arrays.asList(new Column("Ticket_Task","TICKET_ID"), new Column("Ticket_Task","TASK")));
-//  		    
-//  		    DataObject dataobj = persobj.get(sq);
-//  		    return "maha";
-//  		  
-////  		    Iterator it = (Iterator)dataobj.getRows("Ticket_Task");
-////  		    
-////  		   ArrayList<String> ids = new ArrayList<String>();
-////  		   
-////  		    while (it.hasNext()) { 
-////  		       Row row = (Row) it.next();
-////  		       String ticketId = (String) row.get("TICKET_ID");
-////  		       ids.add(ticketId);
-////  		    }
-////  		  return ids.toString();
-//   	  }
-//   	   
-//		  catch(Throwable t) {
-//			  return t.toString();
-//		  }  
-//		    
-//    }
 
 
-//       //........................WHEN CLICK THE SPECIFIED TICKET IT FETCH THE ALL THE INFORMATION FROM THIS TICKET...............................
-//
-//
-//   public static HashMap<String, String> getTicketDetailsUsingTicketId(Persistence persobj, String TicketID) throws DataAccessException {
-//        
-//      try {  
-//    	   
-//           HashMap<String, String> map = null;  
-//           String TASK = (String) gettingTaskFromTicketId(persobj,TicketID);                                          //  finding TASK
-//    
-//           Date[] Dates = gettingDateFromTicketId(persobj,TicketID);                                                 //  finding R_DATE and m_DATE
-//           Date releseDate = Dates[0];
-//           Date maxDate = Dates[1];
-//     
-//           String owner = (String) gettingOwnerIdFromTicketId(persobj,TicketID);                                       //   finding OWNER
-//     
-//           String currentWorkerId = gettingEmployeeIdFromTicketId(persobj,TicketID);                                    //   finding CURRENT_WORKER
-//     
-//           Row currentWorkerDetails = gettingEmployeeRowFromTicketId(currentWorkerId);                                   //   finding CURRENT_WORKER_DETAILS
-//      
-//           int PriorityId = gettingPriorityIdFromTicketId(persobj,TicketID);                                        //   finding PRIORITY_ID
-//    
-//           String priority = gettingPriorityNameFromPriorityId(persobj,PriorityId);                                     //   finding PRIORITY
-//     
-//           int statusId = gettingStatusIdFromTicketId(persobj, TicketID);
-//     
-//           String status = gettingStatusNameFromStstusId(persobj,statusId);
-//
-//           SimpleDateFormat sDateFormat = new SimpleDateFormat("dd/MMM/yyyy");
-//      
-//           map  = new HashMap<>();
-//           map.put("TICKET_ID", TicketID);
-//           map.put("OWNER_ID", owner);
-//           map.put("RELESE_DATE", sDateFormat.format(releseDate));
-//           map.put("MAX_DATE", sDateFormat.format(maxDate));
-//           map.put("EMP_ID", currentWorkerDetails.get("EMP_ID").toString());
-//           map.put("PRIORITY", priority);
-//           map.put("STSTUS", status);
-//           map.put("TASK", TASK);
-//           
-//           return map;
-//     }
-//     catch(Throwable t){
-//            System.out.println(t.toString());
-//            return null;
-//     }
-//    }
-   
-   
    
      public static HashMap<String, String> getTicketDetailsUsingTicketId(String TicketID) throws DataAccessException, SQLException, QueryConstructionException {
     	 System.out.println("getTicketDetailsUsingTicketId");
@@ -883,6 +810,57 @@ public class MickeyDataBaseClass
        
       
        
+       
+       
+//     //........................WHEN CLICK THE SPECIFIED TICKET IT FETCH THE ALL THE INFORMATION FROM THIS TICKET...............................
+//
+//
+// public static HashMap<String, String> getTicketDetailsUsingTicketId(Persistence persobj, String TicketID) throws DataAccessException {
+//      
+//    try {  
+//  	   
+//         HashMap<String, String> map = null;  
+//         String TASK = (String) gettingTaskFromTicketId(persobj,TicketID);                                          //  finding TASK
+//  
+//         Date[] Dates = gettingDateFromTicketId(persobj,TicketID);                                                 //  finding R_DATE and m_DATE
+//         Date releseDate = Dates[0];
+//         Date maxDate = Dates[1];
+//   
+//         String owner = (String) gettingOwnerIdFromTicketId(persobj,TicketID);                                       //   finding OWNER
+//   
+//         String currentWorkerId = gettingEmployeeIdFromTicketId(persobj,TicketID);                                    //   finding CURRENT_WORKER
+//   
+//         Row currentWorkerDetails = gettingEmployeeRowFromTicketId(currentWorkerId);                                   //   finding CURRENT_WORKER_DETAILS
+//    
+//         int PriorityId = gettingPriorityIdFromTicketId(persobj,TicketID);                                        //   finding PRIORITY_ID
+//  
+//         String priority = gettingPriorityNameFromPriorityId(persobj,PriorityId);                                     //   finding PRIORITY
+//   
+//         int statusId = gettingStatusIdFromTicketId(persobj, TicketID);
+//   
+//         String status = gettingStatusNameFromStstusId(persobj,statusId);
+//
+//         SimpleDateFormat sDateFormat = new SimpleDateFormat("dd/MMM/yyyy");
+//    
+//         map  = new HashMap<>();
+//         map.put("TICKET_ID", TicketID);
+//         map.put("OWNER_ID", owner);
+//         map.put("RELESE_DATE", sDateFormat.format(releseDate));
+//         map.put("MAX_DATE", sDateFormat.format(maxDate));
+//         map.put("EMP_ID", currentWorkerDetails.get("EMP_ID").toString());
+//         map.put("PRIORITY", priority);
+//         map.put("STSTUS", status);
+//         map.put("TASK", TASK);
+//         
+//         return map;
+//   }
+//   catch(Throwable t){
+//          System.out.println(t.toString());
+//          return null;
+//   }
+//  }
+ 
+ 
        
        
 //       //................................................TICKET_ID TO TASK...........................................................
