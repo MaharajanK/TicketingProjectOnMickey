@@ -827,155 +827,14 @@ public class MickeyDataBaseClass
        
        
        
-       
-       
-       
-       public static void MickeyCodeToSqlQuery() throws DataAccessException, SQLException, QueryConstructionException {
-
-        
-
-    	   
-    	   System.out.println("getTicketDetailsUsingTicketId");
-           RelationalAPI relAPI = RelationalAPI.getInstance();
-           Connection conn = null;
-           Statement stmt = null;
-           DataSet ds = null;
-           
-           try{   
-          	 
-
-        	   
-        	   conn = relAPI.getConnection();
-               SelectQuery sq = new SelectQueryImpl(new Table("Ticket_Task"));
-
-               Column c1 = new Column("Ticket_Task", "TICKET_ID");
-               Column c2 = new Column("Ticket_Task", "TASK");
-
-               Column c3 = new Column("Emp_Vs_Ticket", "EMP_ID");
-               Column c4 = new Column("Emp_Vs_Ticket", "TICKET_ID");
-
-               Column c5 = new Column("Ticket_Vs_Date", "TICKET_ID");
-               Column c6 = new Column("Ticket_Vs_Date", "RELESE_DATE");
-               Column c7 = new Column("Ticket_Vs_Date", "MAX_DATE");
-
-               Column c8 = new Column("Ticket_Vs_Owner", "TICKET_ID");
-               Column c9 = new Column("Ticket_Vs_Owner", "OWNER_ID");
-
-               Column c10 = new Column("Ticket_Vs_Priority", "TICKET_ID");
-               Column c11 = new Column("Ticket_Vs_Priority", "PRIORITY_ID");
-
-               Column c12 = new Column("Priority_Detail", "PRIORITY_ID");
-               Column c13 = new Column("Priority_Detail", "PRIORITY_NAME");
-
-               Column c14 = new Column("Ticket_Vs_Status", "TICKET_ID");
-               Column c15 = new Column("Ticket_Vs_Status", "STATUS_ID");
-
-               Column c16 = new Column("Status_Types", "STATUS_ID");
-               Column c17 = new Column("Status_Types", "STATUS_NAME");
-
-               sq.addSelectColumn(c1);
-               sq.addSelectColumn(c2);
-
-               sq.addSelectColumn(c3);
-               sq.addSelectColumn(c4);
-
-               sq.addSelectColumn(c5);
-               sq.addSelectColumn(c6);
-               sq.addSelectColumn(c7);
-
-               sq.addSelectColumn(c8);
-               sq.addSelectColumn(c9);
-
-               sq.addSelectColumn(c10);
-               sq.addSelectColumn(c11);
-
-               sq.addSelectColumn(c12);
-               sq.addSelectColumn(c13);
-
-               sq.addSelectColumn(c14);
-               sq.addSelectColumn(c15);
-
-               sq.addSelectColumn(c16);
-               sq.addSelectColumn(c17);
-
-
-                
-               Criteria  SelectCt = new Criteria(new Column("Ticket_Task", "TICKET_ID"), "DB-T2" , QueryConstants.EQUAL);
-               sq.setCriteria(SelectCt);
-               
-
-
-                Criteria joincriteria1 = new Criteria(Column.getColumn("Ticket_Task", "TICKET_ID"), Column.getColumn("Emp_Vs_Ticket","TICKET_ID"), QueryConstants.EQUAL);
-                Join join1 = new Join("Ticket_Task", "Emp_Vs_Ticket", joincriteria1, Join.INNER_JOIN);
-                sq.addJoin(join1);
-
-                Criteria joincriteria2 = new Criteria(Column.getColumn("Ticket_Task", "TICKET_ID"), Column.getColumn("Ticket_Vs_Date","TICKET_ID"), QueryConstants.EQUAL);
-                Join join2 = new Join("Ticket_Task", "Ticket_Vs_Date", joincriteria2, Join.INNER_JOIN);
-                sq.addJoin(join2);
-
-                Criteria joincriteria3 = new Criteria(Column.getColumn("Ticket_Task", "TICKET_ID"), Column.getColumn("Ticket_Vs_Owner","TICKET_ID"), QueryConstants.EQUAL);
-                Join join3 = new Join("Ticket_Task", "Ticket_Vs_Owner", joincriteria3, Join.INNER_JOIN);
-                sq.addJoin(join3);
-
-                Criteria joincriteria4 = new Criteria(Column.getColumn("Ticket_Task", "TICKET_ID"), Column.getColumn("Ticket_Vs_Priority","TICKET_ID"), QueryConstants.EQUAL);
-                Join join4 = new Join("Ticket_Task", "Ticket_Vs_Priority", joincriteria4, Join.INNER_JOIN);
-                sq.addJoin(join4);
-
-                Criteria joincriteria5 = new Criteria(Column.getColumn("Ticket_Vs_Priority", "PRIORITY_ID"), Column.getColumn("Priority_Detail","PRIORITY_ID"), QueryConstants.EQUAL);
-                Join join5 = new Join("Ticket_Vs_Priority", "Priority_Detail", joincriteria5, Join.INNER_JOIN);
-                sq.addJoin(join5);
-
-                Criteria joincriteria6 = new Criteria(Column.getColumn("Ticket_Task", "TICKET_ID"), Column.getColumn("Ticket_Vs_Status","TICKET_ID"), QueryConstants.EQUAL);
-                Join join6 = new Join("Ticket_Task", "Ticket_Vs_Status", joincriteria6, Join.INNER_JOIN);
-                sq.addJoin(join6);
-
-                Criteria joincriteria7 = new Criteria(Column.getColumn("Ticket_Vs_Status", "STATUS_ID"), Column.getColumn("Status_Types","STATUS_ID"), QueryConstants.EQUAL);
-                Join join7 = new Join("Ticket_Vs_Status", "Status_Types", joincriteria7, Join.INNER_JOIN);
-                sq.addJoin(join7);
-        		      
-
-			    System.out.println(RelationalAPI.getInstance().getSelectSQL(sq));
-               
-}
-
-
-     finally
-     {
-       if (ds != null){
-       ds.close();
-     }
-     if (stmt!= null){
-        ((Connection) stmt).close();
-     }
-        //return the connection to the pool
-     if (conn!=null){
-         conn.close();
-     }
-}
-		
-
-   }     
+  
          
        
      
        public static String UpdateingTicketStatus(String emp_id, int status_id) throws Exception {
     	   
-    	   
-    	   
-//    	   persobj = PersistenceClass.getInstance();
-//    	   UpdateQuery uq = new UpdateQueryImpl("Ticket_Vs_Status");
-//    	   
-//    	   Join  join1 = new Join("Ticket_Vs_Status", "Emp_Vs_Ticket", new  String[]{"TICKET_ID"}, new String[]{"TICKET_ID"}, Join.INNER_JOIN);
-//    	   uq.addJoin(join1);
-//    	   
-//    	   Criteria c = new Criteria(new Column("Emp_Vs_Ticket", "EMP_ID"),emp_id, QueryConstants.EQUAL);
-//    	   uq.setCriteria(c);
-//    	     
-//    	   uq.setUpdateColumn("STATUS_ID",2); 
-//    	  
-//    	   persobj.update(uq);
-    	   
-    	   
+
+//         <-------------------------------- Use selectQuery get dataobject and update the row------------------------------------------>    	   
     	   
     	   persobj = PersistenceClass.getInstance();
     	   
@@ -1011,6 +870,28 @@ public class MickeyDataBaseClass
     	   
     	   return emp_id+" : UPDATED";
     	   
+    	   
+    	   
+//         <--------------------------------------------Use updateQuery directly------------------------------------------------------>    	   
+    	   
+//	   persobj = PersistenceClass.getInstance();
+//	   UpdateQuery uq = new UpdateQueryImpl("Ticket_Vs_Status");
+//	   
+//	   Join  join1 = new Join("Ticket_Vs_Status", "Emp_Vs_Ticket", new  String[]{"TICKET_ID"}, new String[]{"TICKET_ID"}, Join.INNER_JOIN);
+//	   uq.addJoin(join1);
+//	   
+//	   Criteria c = new Criteria(new Column("Emp_Vs_Ticket", "EMP_ID"),emp_id, QueryConstants.EQUAL);
+//	   uq.setCriteria(c);
+//	     
+//	   uq.setUpdateColumn("STATUS_ID",2); 
+//	  
+//	   persobj.update(uq);
+    	   
+//     return emp_id+" : UPDATED";    	   
+	   
+	   
+	   
+    	   
        }
         
        
@@ -1021,7 +902,134 @@ public class MickeyDataBaseClass
        
        
        
+//   <----------------------------------------------MICKEY CODE TO SQL QUERY---------------------------------------------->       
        
+       
+//       public static void MickeyCodeToSqlQuery() throws DataAccessException, SQLException, QueryConstructionException {
+//
+//        
+//
+//    	   
+//    	   System.out.println("getTicketDetailsUsingTicketId");
+//           RelationalAPI relAPI = RelationalAPI.getInstance();
+//           Connection conn = null;
+//           Statement stmt = null;
+//           DataSet ds = null;
+//           
+//           try{   
+//          	 
+//
+//        	   
+//        	   conn = relAPI.getConnection();
+//               SelectQuery sq = new SelectQueryImpl(new Table("Ticket_Task"));
+//
+//               Column c1 = new Column("Ticket_Task", "TICKET_ID");
+//               Column c2 = new Column("Ticket_Task", "TASK");
+//
+//               Column c3 = new Column("Emp_Vs_Ticket", "EMP_ID");
+//               Column c4 = new Column("Emp_Vs_Ticket", "TICKET_ID");
+//
+//               Column c5 = new Column("Ticket_Vs_Date", "TICKET_ID");
+//               Column c6 = new Column("Ticket_Vs_Date", "RELESE_DATE");
+//               Column c7 = new Column("Ticket_Vs_Date", "MAX_DATE");
+//
+//               Column c8 = new Column("Ticket_Vs_Owner", "TICKET_ID");
+//               Column c9 = new Column("Ticket_Vs_Owner", "OWNER_ID");
+//
+//               Column c10 = new Column("Ticket_Vs_Priority", "TICKET_ID");
+//               Column c11 = new Column("Ticket_Vs_Priority", "PRIORITY_ID");
+//
+//               Column c12 = new Column("Priority_Detail", "PRIORITY_ID");
+//               Column c13 = new Column("Priority_Detail", "PRIORITY_NAME");
+//
+//               Column c14 = new Column("Ticket_Vs_Status", "TICKET_ID");
+//               Column c15 = new Column("Ticket_Vs_Status", "STATUS_ID");
+//
+//               Column c16 = new Column("Status_Types", "STATUS_ID");
+//               Column c17 = new Column("Status_Types", "STATUS_NAME");
+//
+//               sq.addSelectColumn(c1);
+//               sq.addSelectColumn(c2);
+//
+//               sq.addSelectColumn(c3);
+//               sq.addSelectColumn(c4);
+//
+//               sq.addSelectColumn(c5);
+//               sq.addSelectColumn(c6);
+//               sq.addSelectColumn(c7);
+//
+//               sq.addSelectColumn(c8);
+//               sq.addSelectColumn(c9);
+//
+//               sq.addSelectColumn(c10);
+//               sq.addSelectColumn(c11);
+//
+//               sq.addSelectColumn(c12);
+//               sq.addSelectColumn(c13);
+//
+//               sq.addSelectColumn(c14);
+//               sq.addSelectColumn(c15);
+//
+//               sq.addSelectColumn(c16);
+//               sq.addSelectColumn(c17);
+//
+//
+//                
+//               Criteria  SelectCt = new Criteria(new Column("Ticket_Task", "TICKET_ID"), "DB-T2" , QueryConstants.EQUAL);
+//               sq.setCriteria(SelectCt);
+//               
+//
+//
+//                Criteria joincriteria1 = new Criteria(Column.getColumn("Ticket_Task", "TICKET_ID"), Column.getColumn("Emp_Vs_Ticket","TICKET_ID"), QueryConstants.EQUAL);
+//                Join join1 = new Join("Ticket_Task", "Emp_Vs_Ticket", joincriteria1, Join.INNER_JOIN);
+//                sq.addJoin(join1);
+//
+//                Criteria joincriteria2 = new Criteria(Column.getColumn("Ticket_Task", "TICKET_ID"), Column.getColumn("Ticket_Vs_Date","TICKET_ID"), QueryConstants.EQUAL);
+//                Join join2 = new Join("Ticket_Task", "Ticket_Vs_Date", joincriteria2, Join.INNER_JOIN);
+//                sq.addJoin(join2);
+//
+//                Criteria joincriteria3 = new Criteria(Column.getColumn("Ticket_Task", "TICKET_ID"), Column.getColumn("Ticket_Vs_Owner","TICKET_ID"), QueryConstants.EQUAL);
+//                Join join3 = new Join("Ticket_Task", "Ticket_Vs_Owner", joincriteria3, Join.INNER_JOIN);
+//                sq.addJoin(join3);
+//
+//                Criteria joincriteria4 = new Criteria(Column.getColumn("Ticket_Task", "TICKET_ID"), Column.getColumn("Ticket_Vs_Priority","TICKET_ID"), QueryConstants.EQUAL);
+//                Join join4 = new Join("Ticket_Task", "Ticket_Vs_Priority", joincriteria4, Join.INNER_JOIN);
+//                sq.addJoin(join4);
+//
+//                Criteria joincriteria5 = new Criteria(Column.getColumn("Ticket_Vs_Priority", "PRIORITY_ID"), Column.getColumn("Priority_Detail","PRIORITY_ID"), QueryConstants.EQUAL);
+//                Join join5 = new Join("Ticket_Vs_Priority", "Priority_Detail", joincriteria5, Join.INNER_JOIN);
+//                sq.addJoin(join5);
+//
+//                Criteria joincriteria6 = new Criteria(Column.getColumn("Ticket_Task", "TICKET_ID"), Column.getColumn("Ticket_Vs_Status","TICKET_ID"), QueryConstants.EQUAL);
+//                Join join6 = new Join("Ticket_Task", "Ticket_Vs_Status", joincriteria6, Join.INNER_JOIN);
+//                sq.addJoin(join6);
+//
+//                Criteria joincriteria7 = new Criteria(Column.getColumn("Ticket_Vs_Status", "STATUS_ID"), Column.getColumn("Status_Types","STATUS_ID"), QueryConstants.EQUAL);
+//                Join join7 = new Join("Ticket_Vs_Status", "Status_Types", joincriteria7, Join.INNER_JOIN);
+//                sq.addJoin(join7);
+//        		      
+//
+//			    System.out.println(RelationalAPI.getInstance().getSelectSQL(sq));
+//               
+//}
+//
+//
+//     finally
+//     {
+//       if (ds != null){
+//       ds.close();
+//     }
+//     if (stmt!= null){
+//        ((Connection) stmt).close();
+//     }
+//        //return the connection to the pool
+//     if (conn!=null){
+//         conn.close();
+//     }
+//}
+//		
+//
+//   }   
        
        
        
