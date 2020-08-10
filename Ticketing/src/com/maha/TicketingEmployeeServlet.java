@@ -98,6 +98,23 @@ public class TicketingEmployeeServlet extends HttpServlet{
         	   }
            }
            
+           else if(URILength == 8) {
+        	  if(URIArray[URIArray.length - 3].equals("update")) {
+        		  if(URIArray[URIArray.length - 2].equals("status")) {
+        			   try {
+        				   
+						String result  = get.UpdateingTicketStatus(URIArray[URIArray.length - 5], Integer. parseInt(fileName));
+						String json = new Gson().toJson(result);
+		                out.println(json);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	                   
+        		  }
+        	  }
+           }
+           
 	}
 
 
