@@ -2,6 +2,7 @@ package com.maha;
 
 
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Scanner;
@@ -23,6 +24,7 @@ import com.adventnet.ds.query.GroupByClause;
 import com.adventnet.ds.query.GroupByColumn;
 import com.adventnet.ds.query.QueryConstants;
 import com.adventnet.ds.query.QueryConstructionException;
+import com.adventnet.ds.query.Range;
 import com.adventnet.ds.query.SelectQuery;
 import com.adventnet.ds.query.SelectQueryImpl;
 import com.adventnet.ds.query.Table;
@@ -104,8 +106,8 @@ class PersistenceClass{
 		
 		if(persobj == null) {
 			
-			//persobj = (Persistence) new PersistenceClass();
-			 persobj = (Persistence)BeanUtil.lookup("Persistence");
+			persobj = (Persistence) new PersistenceClass();
+			 //persobj = (Persistence)BeanUtil.lookup("Persistence");
 			System.out.println("////////////////////////////   CREATED   /////////////////////////////////");
 		}
 		return persobj;
@@ -134,7 +136,8 @@ public class MickeyDataBaseClass
     	 
 //       <<<----------------------------------------------------JUST TESTING---------------------------------------------------------->>>
     	 
-    	 
+    	 updateUseingrelationalAPI("ZU-TK-190");
+    	 // UpdateingTicketStatus("ZU-TK-190", 5);
 //    	 MickeyCodeToSqlQuery();
 //    	 System.out.println(UpdateingTicketStatus("ZU-TK-190", 2));
 //    	 System.out.println(get.gettingAllTicketsDetails());
@@ -510,9 +513,6 @@ public class MickeyDataBaseClass
            
        while (ds.next()) {
     	   
-                 System.out.println(ds.getString(17));
-
-           
                  
                  map  = new HashMap<>();
                  map.put("TICKET_ID", ds.getString(1));
@@ -861,7 +861,7 @@ public class MickeyDataBaseClass
                         System.out.println(row);
                         
                         row.set("STATUS_ID",status_id);
-                      d.updateRow(row);
+                     d.updateRow(row);
                       persobj.update(d);
     
                   }
@@ -896,7 +896,82 @@ public class MickeyDataBaseClass
         
        
       
-       
+       public static void updateUseingrelationalAPI(String emp_id) throws Exception {
+		
+//    	   persobj = PersistenceClass.getInstance();
+//    	   UpdateQuery uq = new UpdateQueryImpl("Ticket_Vs_Status");
+//    	   Join  join1 = new Join("Ticket_Vs_Status", "Ticket_Vs_Priority", new  String[]{"TICKET_ID"}, new String[]{"TICKET_ID"}, Join.INNER_JOIN);
+//    	   uq.addJoin(join1);
+//    	   Criteria c = new Criteria(new Column("Ticket_Vs_Status", "TICKET_ID"),emp_id, QueryConstants.EQUAL);
+//    	   uq.setCriteria(c);
+//    	   uq.setUpdateColumn("STATUS_ID",new Column("Ticket_Vs_Priority", "PRIORITY_ID"));
+//    	   persobj.update(uq);
+//    	   System.out.println("....................");
+    	   
+    	   
+    	   
+  	   
+    	 RelationalAPI relAPI = RelationalAPI.getInstance();
+         Connection conn = null;
+         Statement stmt = null;
+         DataSet ds = null;
+         
+         
+         try(Connection con = relAPI.getConnection())
+ 		{
+ 			UpdateQuery uq = new UpdateQueryImpl("Ticket_Vs_Status");
+ 			uq.setUpdateColumn("STATUS_ID", 2);
+ 			
+ 			Join  join1 = new Join("Ticket_Vs_Status", "Emp_Vs_Ticket", new  String[]{"TICKET_ID"}, new String[]{"TICKET_ID"}, Join.INNER_JOIN);
+ 	        uq.addJoin(join1);
+ 	   
+ 	        Criteria c = new Criteria(new Column("Emp_Vs_Ticket", "EMP_ID"),emp_id, QueryConstants.EQUAL);
+ 	        uq.setCriteria(c);
+ 	        
+ 			String sql = relAPI.getUpdateSQL(uq);
+ 			
+ 			try
+ 			{   	//<------------API1(String , OBJECT)------------>
+ 				 
+ 				relAPI.executeUpdate(relAPI.getUpdateSQL(uq), new Object[0]);
+ 			
+ 				   //<------------API2(Connection, String , OBJECT)------------>
+ 			
+//				    relAPI.executeUpdate(conn, relAPI.getUpdateSQL(uq), new Object[0]);
+				                     
+				   //<-----------API3(PreparedStatement)------------->
+				    
+// 				try(PreparedStatement ps = con.prepareStatement(sql))
+// 				{   
+// 					relAPI.executeUpdate(ps);
+// 					System.out.println("...............UPDATED2..............");
+// 				}
+ 				
+ 			}
+ 			catch(SQLException e)
+ 			{
+ 				e.printStackTrace();
+ 				//assertTrue("TestSQLExceptionHandlerImpl class is not invoked for the SQLException", e.getNextException().getMessage().contains("Exception is handled"));
+ 			}
+ 		}
+
+   finally
+   {
+     if (ds != null){
+     ds.close();
+   }
+   if (stmt!= null){
+      ((Connection) stmt).close();
+   }
+      //return the connection to the pool
+   if (conn!=null){
+       conn.close();
+   }
+}
+        
+        
+    	   
+       }   
        
        
        
