@@ -884,7 +884,7 @@ public class MickeyDataBaseClass
         
        
       
-       public static void updateUseingrelationalAPI(String emp_id,int status_id) throws Exception {
+       public static void updateingTicketStatusUsingRelationalAPI(String emp_id,int status_id) throws Exception {
 		
     	   
 //    	   persobj = PersistenceClass.getInstance();
