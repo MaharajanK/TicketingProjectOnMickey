@@ -106,8 +106,8 @@ class PersistenceClass{
 		
 		if(persobj == null) {
 			
-			persobj = (Persistence) new PersistenceClass();
-			 //persobj = (Persistence)BeanUtil.lookup("Persistence");
+			//persobj = (Persistence) new PersistenceClass();
+			 persobj = (Persistence)BeanUtil.lookup("Persistence");
 			System.out.println("////////////////////////////   CREATED   /////////////////////////////////");
 		}
 		return persobj;
@@ -134,9 +134,9 @@ public class MickeyDataBaseClass
     	 
     	 DataAdding();
     	 
-//       <<<----------------------------------------------------JUST TESTING---------------------------------------------------------->>>
+//       <<<----------------------------------------------------FOR TESTING ONLY TESTING---------------------------------------------------------->>>
     	 
-    	 updateUseingrelationalAPI("ZU-TK-190");
+//    	 updateUseingrelationalAPI("ZU-TK-190",3);
     	 // UpdateingTicketStatus("ZU-TK-190", 5);
 //    	 MickeyCodeToSqlQuery();
 //    	 System.out.println(UpdateingTicketStatus("ZU-TK-190", 2));
@@ -185,7 +185,6 @@ public class MickeyDataBaseClass
      public static void DataAdding() throws Exception {
     	 
     	 createTicketsForTemUse();
-    	 
          setPriority();
          setStatus();
          addEmployees();  
@@ -821,20 +820,11 @@ public class MickeyDataBaseClass
        }
     
        
-       
-       
-       
-       
-       
-       
-  
-         
-       
      
        public static String UpdateingTicketStatus(String emp_id, int status_id) throws Exception {
     	   
 
-//         <-------------------------------- Use selectQuery get dataobject and update the row------------------------------------------>    	   
+//         <-------------------------------- Use selectQuery get DataObject and update the row------------------------------------------>    	   
     	   
     	   persobj = PersistenceClass.getInstance();
     	   
@@ -861,18 +851,16 @@ public class MickeyDataBaseClass
                         System.out.println(row);
                         
                         row.set("STATUS_ID",status_id);
-                     d.updateRow(row);
-                      persobj.update(d);
+                        d.updateRow(row);
+                        persobj.update(d);
     
                   }
-           
-   
-    	   
     	   return emp_id+" : UPDATED";
     	   
     	   
     	   
 //         <--------------------------------------------Use updateQuery directly------------------------------------------------------>    	   
+    	   
     	   
 //	   persobj = PersistenceClass.getInstance();
 //	   UpdateQuery uq = new UpdateQueryImpl("Ticket_Vs_Status");
@@ -896,8 +884,9 @@ public class MickeyDataBaseClass
         
        
       
-       public static void updateUseingrelationalAPI(String emp_id) throws Exception {
+       public static void updateUseingrelationalAPI(String emp_id,int status_id) throws Exception {
 		
+    	   
 //    	   persobj = PersistenceClass.getInstance();
 //    	   UpdateQuery uq = new UpdateQueryImpl("Ticket_Vs_Status");
 //    	   Join  join1 = new Join("Ticket_Vs_Status", "Ticket_Vs_Priority", new  String[]{"TICKET_ID"}, new String[]{"TICKET_ID"}, Join.INNER_JOIN);
@@ -920,7 +909,7 @@ public class MickeyDataBaseClass
          try(Connection con = relAPI.getConnection())
  		{
  			UpdateQuery uq = new UpdateQueryImpl("Ticket_Vs_Status");
- 			uq.setUpdateColumn("STATUS_ID", 2);
+ 			uq.setUpdateColumn("STATUS_ID", status_id);
  			
  			Join  join1 = new Join("Ticket_Vs_Status", "Emp_Vs_Ticket", new  String[]{"TICKET_ID"}, new String[]{"TICKET_ID"}, Join.INNER_JOIN);
  	        uq.addJoin(join1);
