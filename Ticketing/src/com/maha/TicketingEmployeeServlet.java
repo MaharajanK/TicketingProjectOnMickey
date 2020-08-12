@@ -103,7 +103,7 @@ public class TicketingEmployeeServlet extends HttpServlet{
         		  if(URIArray[URIArray.length - 2].equals("status")) {
         			   try {
         				   
-						String result  = get.UpdateingTicketStatus(URIArray[URIArray.length - 5], Integer. parseInt(fileName));
+						String result  = get.updateingTicketStatus(URIArray[URIArray.length - 5], Integer. parseInt(fileName));
 						String json = new Gson().toJson(result);
 		                out.println(json);
 					} catch (Exception e) {

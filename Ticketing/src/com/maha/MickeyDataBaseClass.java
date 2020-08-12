@@ -821,7 +821,7 @@ public class MickeyDataBaseClass
     
        
      
-       public static String UpdateingTicketStatus(String emp_id, int status_id) throws Exception {
+       public static String updateingTicketStatus(String emp_id, int status_id) throws Exception {
     	   
 
 //         <-------------------------------- Use selectQuery get DataObject and update the row------------------------------------------>    	   
