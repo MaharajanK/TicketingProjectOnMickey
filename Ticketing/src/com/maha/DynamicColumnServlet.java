@@ -29,6 +29,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
+
 public class DynamicColumnServlet extends HttpServlet{
     
 	
@@ -54,9 +55,6 @@ public class DynamicColumnServlet extends HttpServlet{
          out.println(URIArray[URILength - 2]);
          out.println(fileName);
          String result;
-         
-         
-         
          
          if(URILength == 5) {
         	 out.println("................hi..................");

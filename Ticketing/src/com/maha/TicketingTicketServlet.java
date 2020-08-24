@@ -44,7 +44,7 @@ public class TicketingTicketServlet extends HttpServlet{
     
     
     
-    
+ 
     //http://localhost:8080/Ticketing/Tickets--------------> all ticket Details
     //and
     //http://localhost:8080/Ticketing/Tickets/(any ticket ID)--------------> all ticket Details
