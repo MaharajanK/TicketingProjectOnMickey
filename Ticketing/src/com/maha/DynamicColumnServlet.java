@@ -55,6 +55,9 @@ public class DynamicColumnServlet extends HttpServlet{
          out.println(fileName);
          String result;
          
+         
+         
+         
          if(URILength == 5) {
         	 out.println("................hi..................");
         	  try{   

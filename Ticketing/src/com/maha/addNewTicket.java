@@ -2,6 +2,7 @@ package com.maha;
 
 import org.json.JSONObject;
 
+import com.adventnet.persistence.Persistence;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 public class addNewTicket extends HttpServlet{
     
     public static String message;
+    public static Persistence persobj;
     public static String parameterName;
     public void init() throws ServletException {
       
@@ -71,29 +73,52 @@ public class addNewTicket extends HttpServlet{
      }
      
      if(Authorization == true) {
-    	 
-//    	 Ticket_Id=(String) jObject.get("TICKET_ID");
-         Task=(String) jObject.get("TASK");
-         Owner_Id=(String) jObject.get("OWNER_ID");
-         Priority=(String) jObject.get("PRIORITY");
-         Assigned_To=(String) jObject.get("EMP_ID");
-         Max_Date=(String) jObject.get("MAX_DATE");
-    
-      	         MickeyDataBaseClass get = new MickeyDataBaseClass();
-             
-               try {
-            	   
-            	     String result = get.createNewTicket(Task, Owner_Id, Priority, Assigned_To, Max_Date); 
-            	     String json = new Gson().toJson(result);
-                     out.println(json);
-      	       } 
-               catch (Exception e) {
-      		     // TODO Auto-generated catch block
-      		     e.printStackTrace();
-
-         }
-   
-         
+    	  String ticket_Id = null;
+   	   
+   	   out.println("jObject :"+jObject.length());
+   	 if(jObject.length() == 5) {
+   		 Task=(String) jObject.get("TASK");
+	         Owner_Id=(String) jObject.get("OWNER_ID");
+	         Priority=(String) jObject.get("PRIORITY");
+	         Assigned_To=(String) jObject.get("EMP_ID");
+	         Max_Date=(String) jObject.get("MAX_DATE");
+	         
+	      	 MickeyDataBaseClass get = new MickeyDataBaseClass();
+	             
+	         try {
+	        	 
+	        	  persobj = PersistenceClass.getInstance();
+	        	  
+	        	  
+	    	       
+	    	       int count = get.findingTotalTicketCounts();
+	    	       ticket_Id = "DB-T"+(count);
+	    	    	      
+	              String result = get.createNewTicket(ticket_Id, Task, Owner_Id, Priority, Assigned_To, Max_Date); 
+	              String json = new Gson().toJson(result);
+	              out.println(json);
+	      	 } 
+	         catch (Exception e) {
+	      		  e.printStackTrace();
+	         }
+	   
+	         
+   	 }  
+   	 
+   	 else {
+   		 CustomColumns c_Columns = new  CustomColumns();
+   		 for(int i=0;i<c_Columns.allUserDefiedColumnNames.size();i++) {
+   		    	 
+   			 try {
+					c_Columns.addDataToUserDefiendColumns(ticket_Id, c_Columns.allUserDefiedColumnNames.get(i), (String) jObject.get(c_Columns.allUserDefiedColumnNames.get(i)));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+   		 
+   		 }
+   		 
+   	 }
      }
        
        

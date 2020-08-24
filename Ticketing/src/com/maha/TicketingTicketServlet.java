@@ -32,6 +32,10 @@ public class TicketingTicketServlet extends HttpServlet{
     
     public static String message;
     public static String parameterName;
+    public static ArrayList<String> fields = new ArrayList<String>(Arrays.asList("TASK","OWNER_ID","PRIORITY","EMP_ID","MAX_DATE")) ;
+    public static ArrayList<String> fieldsForPut = new ArrayList<String>(Arrays.asList("TASK","OWNER_ID","MAX_DATE","PRIORITY","EMP_ID","STSTUS","STARTING_DATE","FINISHING_DATE")) ;
+
+    public static Persistence persobj;
     public void init() throws ServletException {
       
        message = "HELLO SERVLET";
@@ -56,6 +60,7 @@ public class TicketingTicketServlet extends HttpServlet{
            String URI = request.getRequestURI();
            String[] URIArray = URI.split("/");
            int URILength = URIArray.length;
+           
 //           
 //           out.println("URILength : "+URILength );
 //           out.println("URI : "+URI );
@@ -97,6 +102,8 @@ public class TicketingTicketServlet extends HttpServlet{
 	}
 
 
+	
+	
 	//http://localhost:8080/Ticketing/post  -------------->  Create the new ticket 
 
 	 protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -110,14 +117,16 @@ public class TicketingTicketServlet extends HttpServlet{
 	           int URILength = URIArray.length;
 	           
 	           
-		       String[] fields = new String[]{"TASK","OWNER_ID","PRIORITY","EMP_ID","MAX_DATE"};
+		      // String[] fields = new String[]{"TASK","OWNER_ID","PRIORITY","EMP_ID","MAX_DATE"};
+//		      fields = new ArrayList<String>(Arrays.asList("TASK","OWNER_ID","PRIORITY","EMP_ID","MAX_DATE")) ;
+		      
 		       String Task = null;
 		       String Owner_Id = null;
 		       String Priority = null;
 		       String Assigned_To = null;
 		       String Max_Date = null;
 		       boolean Authorization = true;
-		       
+		      
 		       
 		       
 		   if(URILength == 4 && fileName.equals("post")) {
@@ -133,7 +142,7 @@ public class TicketingTicketServlet extends HttpServlet{
 			    	 
 			           Object keyvalue = jObject.get(keyStr);
 
-			           if(!Arrays.asList(fields).contains(keyStr)) {
+			           if(!fields.contains(keyStr)) {
 			        	   out.println("Specified field "+keyStr+" not present in DB");
 			        	   Authorization = false;
 			        	   break;
@@ -147,34 +156,74 @@ public class TicketingTicketServlet extends HttpServlet{
 			         
 			       }
 			   
+			      
 			       if(Authorization == true) {
+			    	   
+			    	   String ticket_Id = null;
+			    	   
+			    	   out.println("jObject :"+jObject.length());
+			    	   
 			    	 
-			         Task=(String) jObject.get("TASK");
-			         Owner_Id=(String) jObject.get("OWNER_ID");
-			         Priority=(String) jObject.get("PRIORITY");
-			         Assigned_To=(String) jObject.get("EMP_ID");
-			         Max_Date=(String) jObject.get("MAX_DATE");
-			    
-			      	 MickeyDataBaseClass get = new MickeyDataBaseClass();
-			             
-			         try {
-			            	   
-			              String result = get.createNewTicket(Task, Owner_Id, Priority, Assigned_To, Max_Date); 
-			              String json = new Gson().toJson(result);
-			              out.println(json);
-			      	 } 
-			         catch (Exception e) {
-			      		  e.printStackTrace();
-			         }
-			   
-			         
+			    		 
+			    		 Task=(String) jObject.get("TASK");
+				         Owner_Id=(String) jObject.get("OWNER_ID");
+				         Priority=(String) jObject.get("PRIORITY");
+				         Assigned_To=(String) jObject.get("EMP_ID");
+				         Max_Date=(String) jObject.get("MAX_DATE");
+				         
+				      	 MickeyDataBaseClass get = new MickeyDataBaseClass();
+				             
+				         try {
+				        	 
+				        	  persobj = PersistenceClass.getInstance();
+				        	  
+				        	  
+				    	       
+				    	       int count = get.findingTotalTicketCounts();
+				    	       ticket_Id = "DB-T"+(count);
+				    	    	      
+				              String result = get.createNewTicket(ticket_Id, Task, Owner_Id, Priority, Assigned_To, Max_Date); 
+				              String json = new Gson().toJson(result);
+				              out.println(json);
+				      	 } 
+				         catch (Exception e) {
+				      		  e.printStackTrace();
+				         }
+				   
+				         
+			    	 
+			    	 
+			    	 
+				         if(jObject.length() > 5) {
+				        	 
+			    		 CustomColumns c_Columns = new  CustomColumns();
+			    		 
+			    		 for(int i=0;i<c_Columns.allUserDefiedColumnNames.size();i++) {
+			    		    	 
+			    			 
+			    			 try { 
+			    				 
+			    				String result = c_Columns.addDataToUserDefiendColumns(ticket_Id, c_Columns.allUserDefiedColumnNames.get(i), (String) jObject.get(c_Columns.allUserDefiedColumnNames.get(i)));
+							    out.println(result);
+			    			 } 
+			    			 catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+			    		 
+			    		 }
+			    		 
+			    		 
+			    		 
+			    	 }
+			        
 			     }
 		   }   
 		    
 	 }
 	 
 	 
-	 //http://localhost:8080/Ticketing/Tickets/put/(any ticket ID)   ---------------->  update the specified Ticket 
+	 //http://localhost:8080/Ticketing/Tickets/put/(any ticket ID)   ---------------->   update the specified Ticket 
 	 
 	  protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		   
@@ -193,15 +242,16 @@ public class TicketingTicketServlet extends HttpServlet{
 	 		       JSONObject jObject  = new JSONObject(body);
 	 		      
 	 		       HashMap<String,String> updatePera = new HashMap<String,String>();
-	 		       String[] fields = new String[]{"TASK","OWNER_ID","MAX_DATE","PRIORITY","EMP_ID","STSTUS","STARTING_DATE","FINISHING_DATE"};
-	 		   
-	 		      
+	 		       String[] fields = new String[]{};
+	 		       
+	 		      CustomColumns c_Columns = new CustomColumns();
 	 		      
 	 		       for (String keyStr : jObject.keySet()) {
 	 		    	
 	 		            String keyvalue = (String) jObject.get(keyStr);
 	 		         
-	 		            if(!Arrays.asList(fields).contains(keyStr)) {
+	 		            if(!fieldsForPut.contains(keyStr)) {
+	 		            	
 	 		        	    if(keyStr.equals("TICKET_ID")) {
 	 		        		    out.println("Can't update TICKET_Id value");
 	 		        	    }
@@ -213,8 +263,10 @@ public class TicketingTicketServlet extends HttpServlet{
 	 		           else if(keyvalue.isEmpty()) {
 	 		        	  out.println("The field "+keyStr+"'s value is EMPTY."+"\n"+"Please enter correct value");
 	 		           }
-	 		           updatePera.put(keyStr, (String) keyvalue);
-	 		         
+	 		           
+	 		            
+	 		              updatePera.put(keyStr, (String) keyvalue);
+	 		           
 	 		     }
 	 		    
 	 		     MickeyDataBaseClass get = new MickeyDataBaseClass();
