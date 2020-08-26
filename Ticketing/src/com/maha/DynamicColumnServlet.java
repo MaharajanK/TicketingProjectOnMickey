@@ -37,7 +37,7 @@ public class DynamicColumnServlet extends HttpServlet{
       
     }
 
-    //http://localhost:8080/Ticketing/Column/newColumn/INTEGER                  -------------->   all Employees Details
+    //http://localhost:8080/Ticketing/Column/newColumn/DATATYPE(INTEGER,BIGINT,CHAR)                  -------------->   To get the column
     
 	protected void doGet(HttpServletRequest request,HttpServletResponse response) throws IOException{
            
